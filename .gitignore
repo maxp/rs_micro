@@ -1,0 +1,32 @@
+#
+#	generic .gitignore
+#
+
+# clojure
+/tmp/
+/target/
+/var/
+.lein*
+.nrepl*
+
+*.class
+*.ser
+*~
+*.bak
+*.old
+*.py[co]
+
+.build
+.settings
+.classpath
+.project
+.manager
+.pydevproject
+.idea
+.svn
+.hg*
+
+.DS_Store
+.CVS
+
+#.
