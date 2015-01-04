@@ -2,7 +2,7 @@
 //
 //  Angara.Net dht22-bmp085-gprs sensor
 //
-//  DHT-22, BMP085, Arduino Pro Micro, TinySine SIM900
+//  DHT-22, BMP085, Arduino Pro Micro, SIM900
 //  http://github.com/maxp/rs_micro
 //
 
@@ -14,19 +14,24 @@
 //  http://www.tinyosshop.com/index.php?route=product%2Fproduct&product_id=464
 
 
-char VERSION[] = "rs_micro v0.2";
+char VERSION[] = "rs_micro v0.3";
 
 #define HOST      "rs.angara.net"
 #define PORT      "80"
 #define BASE_URI  "/dat?"
 
-#define INTERVAL    400
+#define INTERVAL    300
 // seconds
 
+
 #define DHT_PIN 4
+
+// !!! redefined for "mamai" hardware
+#define DHT_PIN 6
+
 #define SIM_POWER 5
 
-// Connect VCC of the BMP085 sensor to 3.3V (NOT 5.0V!)
+// Connect VCC of the BMP085 sensor to 3.3V (NOT 5.0V!)  (one red light diode)
 // Connect GND to Ground
 // Connect SCL to i2c clock - on '168/'328 Arduino Uno/Duemilanove/etc thats Analog 5
 // Connect SDA to i2c data - on '168/'328 Arduino Uno/Duemilanove/etc thats Analog 4
@@ -87,7 +92,7 @@ void sim_power() {
   digitalWrite(SIM_POWER, HIGH);
   delay(2000);
   digitalWrite(SIM_POWER, LOW);
-  delay(8000);
+  delay(5000);
 }
 
 
@@ -205,7 +210,7 @@ void loop() {
   imei[0] = 0;
   
   if( check_pwr() ) {
-     
+
         for( int retry=0; retry < SEND_RETRY; retry++ )
         {
             if(!imei[0]) {
@@ -217,8 +222,11 @@ void loop() {
                 strcat(ubuff,"&hwid="); strcat(ubuff, imei); 
               }
             }
-            
+          
             // gsm_cmd_ok("at+cipshut", 3);
+
+            delay(10000);    // gsm network delay
+            
             gsm_cmd_ok(CSTT, 3); 
             gsm_cmd_ok("at+ciicr", 3);
             gsm_cmd_ok("at+cifsr", 3);
